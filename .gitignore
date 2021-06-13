@@ -1,0 +1,11 @@
+*.mat
+GoMACCS_raw/*
+mase/*
+MASE_raw/*
+ORACLES_raw/*
+plots/*
+post/*
+resources/*
+vocals/*
+vocals-updated-raw/*
+.DS_Store
