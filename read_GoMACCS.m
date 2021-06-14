@@ -26,7 +26,7 @@ catch
 end
 
 for iday = 1:length(pdi_files)
-   %% get the files location
+   %% get the files
    conc_dat{iday,1}(:,:) = readmatrix([pdi_files(iday).folder '/' pdi_files(iday).name],...
       'FileType','text');
    cabin{iday,1}(:,:) = readmatrix([cabin_files(iday).folder '/' cabin_files(iday).name],...
@@ -35,7 +35,8 @@ for iday = 1:length(pdi_files)
    %% get the common time
    
    pdi_t = conc_dat{iday}(:,1);
-   cabin_t = cabin{iday}(:,1);
+   pcasp_vidx = cabin{iday}(:,22)>=0;
+   cabin_t = cabin{iday}(pcasp_vidx,1);
    [~, cmt_ipdi,cmt_icabin]=intersect(pdi_t, cabin_t);
    
    %% get pdi data
@@ -76,13 +77,13 @@ for iday = 1:length(pdi_files)
    s_wz = cabin{iday}(cmt_icabin,19);
    s_ap = cabin{iday}(cmt_icabin,16);
    s_p = cabin{iday}(cmt_icabin,15);
-   s_T = cabin{iday}(cmt_icabin,12);
+   s_ta = cabin{iday}(cmt_icabin,12);
    s_rh = cabin{iday}(cmt_icabin,14);
    s_lwc_gerb = cabin{iday}(cmt_icabin,33);
    s_lwc_wire = cabin{iday}(cmt_icabin,34);
-   s_T(s_T==0)=nan;
+   s_ta(s_ta==0)=nan;
    
-   s_thet = (s_T+273.15).*(1000./s_p).^(287/1004);
+   s_thet = (s_ta+273.15).*(1000./s_p).^(287/1004);
    
    s_meanV_ex = s_Vtot_ex./s_ntot_pcasp;
    s_meanD_ex = (s_meanV_ex/(pi/6)).^(1/3);
@@ -92,7 +93,7 @@ for iday = 1:length(pdi_files)
    Rv = 462;
    Rd = 287;
    
-   s_Tk = s_T+273.15;
+   s_Tk = s_ta+273.15;
    s_es = 6.11*exp(Lv/Rv*(1/273.15-1./s_Tk));
    s_e = s_es.*s_rh/100;
    s_mr = s_e*Rd./(Rv*(s_p-s_e));
@@ -114,13 +115,13 @@ for iday = 1:length(pdi_files)
    clouds.gomaccspdi(iday).s_lat = s_lat;
    clouds.gomaccspdi(iday).s_lon = s_lon;
    clouds.gomaccspdi(iday).s_mr = s_mr*1000;
-   clouds.gomaccspdi(iday).s_ntot_ex = s_ntot_pcasp;
+   clouds.gomaccspdi(iday).s_ntot_pcasp = s_ntot_pcasp;
    clouds.gomaccspdi(iday).s_meanD_ex = s_meanD_ex;
    clouds.gomaccspdi(iday).s_rhoa = s_rhoa;
    clouds.gomaccspdi(iday).s_ap = s_ap;
    clouds.gomaccspdi(iday).s_wz = s_wz;
    clouds.gomaccspdi(iday).s_p = s_p;
-   clouds.gomaccspdi(iday).s_T = s_T;
+   clouds.gomaccspdi(iday).s_ta = s_ta;
    clouds.gomaccspdi(iday).s_thet = s_thet;
    clouds.gomaccspdi(iday).s_rh = s_rh;
    clouds.gomaccspdi(iday).s_lwc_gerb = s_lwc_gerb;
