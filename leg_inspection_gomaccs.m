@@ -56,7 +56,7 @@ for iday = 1:length(clouds.gomaccspdi)
    
    low_lwc_idx = s_lwc<0.01;
    
-   normAC = zeros(size(s_ap));
+   normAC = nan(size(s_ap));
    for ileg = 1:nleg
       leg_ti = cloudleg_i(ileg);
       leg_tf = cloudleg_f(ileg);
@@ -117,11 +117,13 @@ for iday = 1:length(clouds.gomaccspdi)
    gomaccspdi_flight_basics(iday).z_CB = z_CB{iday};
    gomaccspdi_flight_basics(iday).z_CT = z_CT{iday};
    
+   clouds.gomaccspdi(iday).normAC = normAC;
+   clouds.gomaccspdi(iday).ent_ratio_qt = ent_ratio_qt;
+   clouds.gomaccspdi(iday).ent_ratio_T = ent_ratio_T;
    if nleg>0
-      clouds.gomaccspdi(iday).normAC = normAC;
-      clouds.gomaccspdi(iday).ent_ratio_qt = ent_ratio_qt;
-      clouds.gomaccspdi(iday).ent_ratio_T = ent_ratio_T;
       clouds.gomaccspdi(iday).AF = s_ql./ql_adb_prof;
+   else
+      clouds.gomaccspdi(iday).AF = s_ql*nan;
    end
 end
 

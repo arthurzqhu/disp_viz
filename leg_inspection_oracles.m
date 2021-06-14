@@ -91,7 +91,7 @@ for iday = 1:length(clouds.oraclespdi)
    %
    low_lwc_idx = lwc<0.01;
    
-   normAC = zeros(size(s_ap));
+   normAC = nan(size(s_ap));
    %
    for ileg = 1:nleg
       leg_ti = ti{iday}(ileg);
@@ -157,11 +157,14 @@ for iday = 1:length(clouds.oraclespdi)
    oraclespdi_flight_basics(iday).qt_BL = qt_BL(iday);
    oraclespdi_flight_basics(iday).qt_FB = qt_FB(iday);
    %
+   clouds.oraclespdi(iday).normAC = normAC;
+   clouds.oraclespdi(iday).ent_ratio_T = ent_ratio_T;
+   clouds.oraclespdi(iday).ent_ratio_qt = ent_ratio_qt;
+   
    if nleg>0
-      clouds.oraclespdi(iday).normAC = normAC;
-      clouds.oraclespdi(iday).ent_ratio_T = ent_ratio_T;
-      clouds.oraclespdi(iday).ent_ratio_qt = ent_ratio_qt;
       clouds.oraclespdi(iday).AF = ql./ql_adb_prof;
+   else
+      clouds.oraclespdi(iday).AF = ql*nan;
    end
    
 %    figure
@@ -171,7 +174,7 @@ for iday = 1:length(clouds.oraclespdi)
    
 end
 %%
-save('oraclespdi_flight_basics.mat', 'oraclespdi_flight_basics')
-% save('clouds.mat','clouds', '-v7.3')
+% save('oraclespdi_flight_basics.mat', 'oraclespdi_flight_basics')
+save('clouds.mat','clouds', '-v7.3')
 
 %%
