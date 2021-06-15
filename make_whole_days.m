@@ -1,6 +1,6 @@
 clear
 cd '~/MEGAsync/grad/research/aerosol_reldisp/datasets/'
-load clouds.mat
+if ~exist('clouds','var') load clouds.mat, end
 
 %%
 close all
@@ -44,7 +44,7 @@ for c= 1:length(campaigns)
             for ifile=1:length(files)
                 gen(ifile)=load([filedir,files(ifile).name]); %Read all of the files
                 gen(ifile).s_disp_pdi(gen(ifile).s_disp_pdi==0)=NaN;
-                gen(ifile).s_disp_pdi(gen(ifile).s_ntot_pdi<25)=NaN;
+                gen(ifile).s_disp_pdi(gen(ifile).s_ntot_pdi<5)=NaN;
             end
         case 'masepdi'
             bindata=load('dp_pdi.mat');
@@ -66,7 +66,7 @@ for c= 1:length(campaigns)
                 y=17.6*gen(ifile).s_ntot_pdi.^(-.8);
                 gen(ifile).s_disp_pdi(gen(ifile).s_disp_pdi>y)=NaN;
                 gen(ifile).s_disp_pdi(gen(ifile).s_disp_pdi==0)=NaN;
-                gen(ifile).s_disp_pdi(gen(ifile).s_ntot_pdi<25)=NaN;
+                gen(ifile).s_disp_pdi(gen(ifile).s_ntot_pdi<5)=NaN;
             end
             
             for ifile=1:length(files)
@@ -96,7 +96,7 @@ for c= 1:length(campaigns)
                 end
                 gen(ifile)=tempdata;
                 gen(ifile).s_disp_pdi(gen(ifile).s_disp_pdi==0)=NaN;
-                gen(ifile).s_disp_pdi(gen(ifile).s_ntot_pdi<25)=NaN;
+                gen(ifile).s_disp_pdi(gen(ifile).s_ntot_pdi<5)=NaN;
             end
     end
     
@@ -115,7 +115,7 @@ for c= 1:length(campaigns)
         
         %calculate the normalized altitude in cloud
         z = gen(ifile).s_ap;
-        normAC = zeros(size(z));
+        normAC = nan(size(z));
         s_t = gen(ifile).s_t;
         ti = fb.(fbvar)(ifile).ti;
         tf = fb.(fbvar)(ifile).tf;
@@ -126,8 +126,8 @@ for c= 1:length(campaigns)
             z_CT = fb.(fbvar)(ifile).z_CT(jleg);
             
             if jleg == 1
-                be4_1st_cld = s_t<ti(jleg);
-                normAC(s_t<ti(jleg)) = (z(be4_1st_cld)-z_CB)/(z_CT-z_CB);
+%                 be4_1st_cld = s_t<ti(jleg);
+%                 normAC(s_t<ti(jleg)) = (z(be4_1st_cld)-z_CB)/(z_CT-z_CB);
             end
             
             incloud_idx = s_t>=ti(jleg)&s_t<=tf(jleg);
@@ -138,8 +138,8 @@ for c= 1:length(campaigns)
 
             % set regions between legs to nan
             if jleg > 1
-                prev_intv_idx = s_t>tf(jleg-1) & s_t<ti(jleg);
-                normAC(prev_intv_idx)= (z(prev_intv_idx)-z_CB)/(z_CT-z_CB);
+%                 prev_intv_idx = s_t>tf(jleg-1) & s_t<ti(jleg);
+%                 normAC(prev_intv_idx)= (z(prev_intv_idx)-z_CB)/(z_CT-z_CB);
             end
         end
         
@@ -159,7 +159,7 @@ for c= 1:length(campaigns)
             ql_adb_lin = adiab_ql(z_CB,z_CT,T_CB,r_CB,p_CB)*1000; 
             z_lin = linspace(z_CB,z_CT,length(ql_adb_lin));
             % observed q_l as a function of time
-            filtered_idx = gen(ifile).s_lwc_pdi<0.01;
+%             filtered_idx = gen(ifile).s_lwc_pdi<0.01;
 
             s_lwc_pdi = gen(ifile).s_lwc_pdi; %threshold for LWC
             rhoa = gen(ifile).s_rhoa;
@@ -201,27 +201,20 @@ for c= 1:length(campaigns)
         cloudlegs_f = fb.(fbvar)(ifile).tf;
 
         s_t = clouds.(camp)(ifile).s_t;
-        a_t = clouds.(camp)(ifile).a_t;
-
-        allinst_commontime = mintersect(floor(s_t), a_t);
-
-        cmt_ipdi = find(ismember(floor(s_t), allinst_commontime));
-        cmt_ipcasp = find(ismember(a_t, allinst_commontime));
 
 %             cm_normAC = gen(ifile).normAC(idxpdi); % where normAC and PCASP data are measured at the same time
-        cm_z = gen(ifile).s_ap(cmt_ipdi);
-        cm_t = clouds.(camp)(ifile).a_t(cmt_ipcasp);
-        cm_lwc = gen(ifile).s_lwc_pdi(cmt_ipdi);
-        cm_a_ntot = clouds.(camp)(ifile).a_ntot(cmt_ipcasp);
-        cm_s_ntot = clouds.(camp)(ifile).s_ntot_pdi(cmt_ipdi);
-        cm_s_disp_pdi = gen(ifile).s_disp_pdi(cmt_ipdi);
+        s_ap = gen(ifile).s_ap;
+        s_lwc_pdi = gen(ifile).s_lwc_pdi;
+        s_ntot_aer = clouds.(camp)(ifile).s_ntot_aer;
+        s_ntot_pdi = clouds.(camp)(ifile).s_ntot_pdi;
+        s_disp_pdi = gen(ifile).s_disp_pdi;
 
         if ~isempty(cloudlegs_i)
             for ileg = 1:length(cloudlegs_i)
                 ti = cloudlegs_i(ileg);
                 tf = cloudlegs_f(ileg);
-                ti_idx = findInSorted(cm_t, ti);
-                tf_idx = findInSorted(cm_t, tf);
+                ti_idx = findInSorted(s_t, ti);
+                tf_idx = findInSorted(s_t, tf);
 
                 if ti_idx<0
                     continue
@@ -234,30 +227,30 @@ for c= 1:length(campaigns)
                 
                 % to sample some extra distance below the cloud top, in case
                 % the flight doesnt only go from low to high
-                if cm_z(ti_idx) < cm_z(tf_idx)
+                if s_ap(ti_idx) < s_ap(tf_idx)
                     ti = ti - 300;
                 else
                     tf = tf + 300;
                 end
 
-                z_min = min(cm_z(cm_t < tf & cm_t > ti));
-                z_max = max(cm_z(cm_t < tf & cm_t > ti));
+                z_min = min(s_ap(s_t < tf & s_t > ti));
+                z_max = max(s_ap(s_t < tf & s_t > ti));
                 z_max_sampled = (z_min+z_max)/2;
    
-                aerCMS = @(x) calcMeanSampsize(x, cm_t < tf & cm_t > ti & cm_z < z_max_sampled);
-                cldCMS = @(x) calcMeanSampsize(x, cm_t < tf_c & cm_t > ti_c & cm_z < z_max_sampled & cm_s_ntot > 25);
+                aerCMS = @(x) calcMeanSampsize(x, s_t < tf & s_t > ti & s_ap < z_max_sampled);
+                cldCMS = @(x) calcMeanSampsize(x, s_t < tf_c & s_t > ti_c & s_ap < z_max_sampled & s_ntot_pdi > 5);
                 
                 try
-%                         drpCMS = @(x) calcMeanSampsize(x, cm_t < tf & cm_t > ti & gen(ifile).s_ap < z_max_sampled);
+%                         drpCMS = @(x) calcMeanSampsize(x, s_t < tf & s_t > ti & gen(ifile).s_ap < z_max_sampled);
 
                     [gen(ifile).a_ntot_CB(ileg), gen(ifile).a_ntot_CB_sampsize(ileg)] = ...
-                        aerCMS(cm_a_ntot);
+                        aerCMS(s_ntot_aer);
                     [gen(ifile).s_ntot_CB(ileg), gen(ifile).s_ntot_CB_sampsize(ileg)] = ...
-                        cldCMS(cm_s_ntot);
+                        cldCMS(s_ntot_pdi);
                     [gen(ifile).s_actfrac_CB(ileg), gen(ifile).s_actfrac_CB_sampsize(ileg)] = ...
-                        cldCMS(cm_s_ntot./cm_a_ntot);
+                        cldCMS(s_ntot_pdi./s_ntot_aer);
                     [gen(ifile).reldisp_CB(ileg), gen(ifile).reldisp_CB_sampsize(ileg)] = ...
-                        cldCMS(cm_s_disp_pdi);
+                        cldCMS(s_disp_pdi);
                 catch
                     [gen(ifile).a_ntot_CB(ileg), gen(ifile).a_ntot_CB_sampsize(ileg), ...
                         gen(ifile).s_ntot_CB(ileg), gen(ifile).s_ntot_CB_sampsize(ileg), ...
@@ -275,27 +268,9 @@ for c= 1:length(campaigns)
         end
         
         
-        
-        
-        
-        
-        
-%         end
-        
-%         %% ------------------------ test -------------------------
-%         if do_test == true
-%             figure
-%             plot(cm_t, cm_a_ntot)
-%             hold on
-%             plot(cm_t, (cm_z<lb_cb & cm_lwc<0.01)*1000)
-%             yyaxis right
-%             plot(cm_t, cm_z)
-%         end
-%         %% ---------------------- test end -----------------------
-            
         AF = ql_obs./ql_adb_prof;
-        AF(filtered_idx) = nan;
-        AF(AF>2)=nan;
+%         AF(filtered_idx) = nan;
+        AF(AF>1)=1;
 % %         AF = AF/max(AF); %normalize in case the cloud base was not 
 %         % determined clearly
 % 
@@ -405,5 +380,8 @@ end
 % end
 
 %% Save the data
+vocals_aeros_dat;
+post_aeros_dat;
+mase_aeros_dat;
 save('clouds.mat','clouds', '-v7.3')
 % finishingTaskSound

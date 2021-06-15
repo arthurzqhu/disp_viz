@@ -1,6 +1,7 @@
-clear
-cd ~/MEGAsync/grad/research/aerosol_reldisp/datasets/
-load clouds.mat
+close all
+cd '~/MEGAsync/grad/research/aerosol_reldisp/datasets/'
+clearvars -except clouds
+if ~exist('clouds','var') load clouds.mat, end
 post_aer_files = dir('post/POST_pcasp/pcasp_1hz_*');
 
 %% get rid of the old fieldnames first
@@ -82,4 +83,4 @@ for iday = 1:length(allinst_commondates)
 end
 
 %%
-save('clouds.mat','clouds', '-v7.3')
+% save('clouds.mat','clouds', '-v7.3')
