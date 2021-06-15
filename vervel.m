@@ -67,8 +67,10 @@ for iw=1:nw
       for ivar = 1:nvar
          nexttile
          scatter(all_X{c,ivar}(w_idx(iw,:)),all_reldisp{c}(w_idx(iw,:)),...
-            10,all_wz{c}(w_idx(iw,:)),'filled')
+            10,all_wz{c}(w_idx(iw,:)),'filled','MarkerFaceAlpha',0.3)
+         
          xlim([prctile(all_X{c,ivar}(w_idx(iw,:)),3) prctile(all_X{c,ivar}(w_idx(iw,:)),97)])
+         ylim([0 1])
          colorbar
          colormap(rainbow)
          wz_bound=prctile(abs(all_wz{c}),95);
