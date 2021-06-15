@@ -1,15 +1,15 @@
-clear
+clearvars -except clouds
 cd '~/MEGAsync/grad/research/aerosol_reldisp/datasets/'
-load clouds.mat
+if ~exist('clouds','var') load clouds.mat, end
 campaigns={'vocalspdi','masepdi','postpdi','oraclespdi','gomaccspdi'};
-typevar = {'a_ntot_ex', 's_ntot_pdi', 's_actfrac', 'AF', 'a_meanD_ex',...
+camp_proper = {'VOCALS','MASE','POST','ORACLES','GoMACCS'};
+typevar = {'s_ntot_aer', 's_ntot_pdi', 's_actfrac', 'AF', 'a_meanD_ex',...
     'ent_ratio_T'};
 typename = {'N_{ia} (#/cc)',...
     'N_d (#/cc)', 'LAF',...
     'Adiabatic Fraction','Mean interstitial aerosol diameter [\mum]',...
     'Entrainment Ratio'};
 typetitle = {'(a)','(b)','(c)','AF','D_a','ER'};
-camp_proper = {'VOCALS','MASE','POST','ORACLES','GoMACCS'};
 dp_color = '#FFBE89';%'#A8CCCC';
 axis_color = '#638FAA';
 
