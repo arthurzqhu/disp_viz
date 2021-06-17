@@ -162,7 +162,9 @@ for iday = 1:length(clouds.oraclespdi)
    clouds.oraclespdi(iday).ent_ratio_qt = ent_ratio_qt;
    
    if nleg>0
-      clouds.oraclespdi(iday).AF = ql./ql_adb_prof;
+      AF = ql./ql_adb_prof;
+      AF(AF>1)=1;
+      clouds.oraclespdi(iday).AF = AF;
    else
       clouds.oraclespdi(iday).AF = ql*nan;
    end

@@ -120,8 +120,11 @@ for iday = 1:length(clouds.gomaccspdi)
    clouds.gomaccspdi(iday).normAC = normAC;
    clouds.gomaccspdi(iday).ent_ratio_qt = ent_ratio_qt;
    clouds.gomaccspdi(iday).ent_ratio_T = ent_ratio_T;
+   
    if nleg>0
-      clouds.gomaccspdi(iday).AF = s_ql./ql_adb_prof;
+      AF = s_ql./ql_adb_prof;
+      AF(AF>1)=1;
+      clouds.gomaccspdi(iday).AF = AF;
    else
       clouds.gomaccspdi(iday).AF = s_ql*nan;
    end
