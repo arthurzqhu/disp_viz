@@ -22,7 +22,6 @@ all_reldisp = cell(nc,1);
 all_X = cell(nc,nvar);
 all_wz = cell(nc,1);
 
-
 for c = 1:nc
    indvar_flt = [];
    reldisp = [];
