@@ -1,6 +1,6 @@
-clear
-close all
-load clouds.mat
+clearvars -except clouds
+cd '~/MEGAsync/grad/research/aerosol_reldisp/datasets/'
+if ~exist('clouds','var') load clouds.mat, end
 load gomaccspdi_flight_basics.mat
 
 z_CB = {nan; 550; 1090; 750; [1200 1000]; nan; nan; nan; [750 1200]; 1790; 1320; nan;...

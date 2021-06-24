@@ -199,6 +199,7 @@ for iday = 1:length(pdi_files)
 end
 
 %%
+leg_inspection_gomaccs
 save('clouds.mat','clouds', '-v7.3')
 % toc
 % finishingTaskSound

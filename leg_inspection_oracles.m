@@ -1,8 +1,7 @@
-clear
+clearvars -except clouds
 cd '~/MEGAsync/grad/research/aerosol_reldisp/datasets/'
+if ~exist('clouds','var') load clouds.mat, end
 load oraclespdi_flight_basics.mat
-load clouds.mat
-
 %%
 
 close all
