@@ -10,3 +10,4 @@ vocals/*
 vocals-updated-raw/*
 .DS_Store
 *.asv
+*.swp
