@@ -164,8 +164,10 @@ for iday = 1:length(clouds.oraclespdi)
       AF = ql./ql_adb_prof;
       AF(AF>1)=1;
       clouds.oraclespdi(iday).AF = AF;
+      clouds.oraclespdi(iday).ql_adb_prof = ql_adb_prof;
    else
       clouds.oraclespdi(iday).AF = ql*nan;
+      clouds.oraclespdi(iday).ql_adb_prof = ql*nan;
    end
    
 %    figure

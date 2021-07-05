@@ -125,8 +125,10 @@ for iday = 1:length(clouds.gomaccspdi)
       AF = s_ql./ql_adb_prof;
       AF(AF>1)=1;
       clouds.gomaccspdi(iday).AF = AF;
+      clouds.gomaccspdi(iday).ql_adb_prof = ql_adb_prof;
    else
       clouds.gomaccspdi(iday).AF = s_ql*nan;
+      clouds.gomaccspdi(iday).ql_adb_prof = s_ql*nan;
    end
 end
 
