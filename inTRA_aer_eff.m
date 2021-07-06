@@ -13,7 +13,7 @@ nc=length(campaigns);
 
 close all
 
-max_ratio=[2 3 5 10 20 50];
+max_ratio=[1 2 3 5 10 20 50];
 ntrial=1;
 trial_allSc_rsq=zeros(ntrial,length(max_ratio));
 doplot=true;
@@ -42,11 +42,13 @@ for iratio=2%:length(max_ratio)
          fbvar=[camp,'_flight_basics'];
          isOorG=any(strcmp({'oraclespdi';'gomaccspdi'},camp));
          
-         % maxN=arrayfun(@(x) clouds.(camppdi)(x).maxN, 1:length(clouds.(camppdi)));
+         % maxN=arrayfun(@(x) clouds.(camppdi)(x).maxN, ...
+            % 1:length(clouds.(camppdi)));
          min_dtpt=100;
          
          % exclude the date where not enough data points are present
-         dtpt_pdi=arrayfun(@(x) length(clouds.(camp)(x).s_t),1:length(clouds.(camp)));
+         dtpt_pdi=arrayfun(@(x) length(clouds.(camp)(x).s_t),...
+            1:length(clouds.(camp)));
          vdate_pdi=find(dtpt_pdi>min_dtpt)';
          
          
@@ -170,9 +172,9 @@ for iratio=2%:length(max_ratio)
                   x3=s_actfrac(rand_samp_idx);
                   x4=normAC(rand_samp_idx);
                   x5=AF(rand_samp_idx);
-
+                  
                   y=reldisp(rand_samp_idx);
-
+                  
                   if strcmp(camp,'gomaccspdi')
                      X=[ones(size(x1)) x3 x5];
                   elseif strcmp(camp,'oraclespdi')
@@ -180,7 +182,7 @@ for iratio=2%:length(max_ratio)
                   else
                      X=[ones(size(x1)) x3 x4];
                   end
-
+                  
                   b=regress(y,X);
                   y_hat=X*b;
                   
@@ -216,9 +218,11 @@ for iratio=2%:length(max_ratio)
          all_y_hat_campmean=allX*meanB{c};
          notnan_idx_cm=~isnan(all_y_hat_campmean);
          notnan_idx_dr=~isnan(all_y_hat_dailyreg);
-         pred_campmean=1-nansum((all_y_hat_campmean-ally).^2)/nansum((ally(notnan_idx_cm)-nanmean(ally(notnan_idx_cm))).^2);
-         pred_dailyreg=1-nansum((all_y_hat_dailyreg-ally).^2)/nansum((ally(notnan_idx_dr)-nanmean(ally(notnan_idx_dr))).^2);
-
+         pred_campmean=1-nansum((all_y_hat_campmean-ally).^2)/...
+            nansum((ally(notnan_idx_cm)-nanmean(ally(notnan_idx_cm))).^2);
+         pred_dailyreg=1-nansum((all_y_hat_dailyreg-ally).^2)/...
+            nansum((ally(notnan_idx_dr)-nanmean(ally(notnan_idx_dr))).^2);
+         
          allcamp_X{c}=[reglr_allX(:,1) reglr_allX(:,4:5)];
          allcamp_Y{c}=ally;
          %
@@ -263,13 +267,17 @@ for iratio=2%:length(max_ratio)
                [x_min, x_25, x_med, x_75, x_max]=deal(x_quartl{:});
                
                
-               line([x_min, x_25],[ax_lim(1) ax_lim(1)],'linewidth',9,'color',dpc)
+               line([x_min, x_25],[ax_lim(1) ax_lim(1)],...
+                  'linewidth',9,'color',dpc)
                plot(x_med,ax_lim(1),'.','MarkerSize',20,'color',dpc)
-               line([x_75, x_max],[ax_lim(1) ax_lim(1)],'linewidth',9,'color',dpc)
+               line([x_75, x_max],[ax_lim(1) ax_lim(1)],...
+                  'linewidth',9,'color',dpc)
                
-               line([ax_lim(1) ax_lim(1)],[y_min, y_25],'linewidth',9,'color',dpc)
+               line([ax_lim(1) ax_lim(1)],[y_min, y_25],...
+                  'linewidth',9,'color',dpc)
                plot(ax_lim(1),y_med,'.','MarkerSize',20,'color',dpc)
-               line([ax_lim(1) ax_lim(1)],[y_75, y_max],'linewidth',9,'color',dpc)
+               line([ax_lim(1) ax_lim(1)],[y_75, y_max],...
+                  'linewidth',9,'color',dpc)
                
                %         xlabel('Predicted relative dispersion')
                %         ylabel('Measured relative dispersion')
@@ -300,7 +308,8 @@ for iratio=2%:length(max_ratio)
       
       allSc_meanB=regress(allSc_Yss, allSc_Xss);
       allSc_tbl=fitlm(allSc_Xss(:,2:end),allSc_Yss);
-      [allSc_coeff, allSc_train_rsq, allSc_test_rsq]=regress_tt(allSc_Yss, allSc_Xss, 0.7);
+      [allSc_coeff, allSc_train_rsq, allSc_test_rsq]=...
+         regress_tt(allSc_Yss, allSc_Xss, 0.7);
       allSc_Ysshat=allSc_Xss*allSc_meanB;
       
       trial_allSc_rsq(itrial,iratio)=allSc_test_rsq;
@@ -405,17 +414,25 @@ if doplot
       
       
       
-      line([box_minx+box_wid*.2, box_minx+box_wid*.2],[box_miny+box_len*.15 box_miny+box_len*.4],...
+      line([box_minx+box_wid*.2, box_minx+box_wid*.2],...
+         [box_miny+box_len*.15 box_miny+box_len*.4],...
          'linewidth',9,'color',dpc)
-      plot(box_minx+box_wid*.2,box_miny+box_len*.5,'.','MarkerSize',20,'color',dpc)
-      line([box_minx+box_wid*.2, box_minx+box_wid*.2],[box_miny+box_len*.6 box_miny+box_len*.85],...
+      plot(box_minx+box_wid*.2,box_miny+box_len*.5,'.',...
+         'MarkerSize',20,'color',dpc)
+      line([box_minx+box_wid*.2, box_minx+box_wid*.2],...
+         [box_miny+box_len*.6 box_miny+box_len*.85],...
          'linewidth',9,'color',dpc)
       
-      text(box_minx+box_wid*.3,box_miny+box_len*.15, 'min','color',dpc,'FontSize',24)
-      text(box_minx+box_wid*.3,box_miny+box_len*.4, '1st quartile','color',dpc,'FontSize',24)
-      text(box_minx+box_wid*.3,box_miny+box_len*.5, 'median','color',dpc,'FontSize',24)
-      text(box_minx+box_wid*.3,box_miny+box_len*.6, '3rd quartile','color',dpc,'FontSize',24)
-      text(box_minx+box_wid*.3,box_miny+box_len*.85, 'max','color',dpc,'FontSize',24)
+      text(box_minx+box_wid*.3,box_miny+box_len*.15,...
+         'min','color',dpc,'FontSize',24)
+      text(box_minx+box_wid*.3,box_miny+box_len*.4,...
+         '1st quartile','color',dpc,'FontSize',24)
+      text(box_minx+box_wid*.3,box_miny+box_len*.5,...
+         'median','color',dpc,'FontSize',24)
+      text(box_minx+box_wid*.3,box_miny+box_len*.6,...
+         '3rd quartile','color',dpc,'FontSize',24)
+      text(box_minx+box_wid*.3,box_miny+box_len*.85,...
+         'max','color',dpc,'FontSize',24)
       
       set(gca,'XLim',ax_lim)
       set(gca,'YLim',ax_lim)
@@ -449,5 +466,5 @@ if doplot
    
    
    %    saveas(figure(1),'plots/sp_meas_vs_pred_eps_u.png') %not using figure anymore
-%        saveas(figure(2),'plots/gen_meas_vs_pred_eps_u.png')
+   saveas(figure(2),'plots/gen_meas_vs_pred_eps_u.png')
 end
