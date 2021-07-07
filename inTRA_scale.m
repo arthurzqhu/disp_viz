@@ -18,7 +18,7 @@ end
 close all
 clear X avgcoeff avgtest_rsq avgtrain_rsq
 
-arat=2.^(0:.5:10);%[1:9 10:10:90 100:100:1000]; % averaging ratio
+arat=round(2.^(.5:.5:10));%[1:9 10:10:90 100:100:1000]; % averaging ratio
 falp=(erf(log10(arat)-1)+1)/2;
 ntrial=20;
 [Sctest_rsq,Sctrain_rsq]=deal(zeros(length(arat),ntrial));
@@ -60,7 +60,7 @@ for itrial=1:ntrial
             deal(zeros(length(days_analyzed),1));
 
          for iday=days_analyzed
-            clear reldisp_sd
+            reldisp_sd=[];
             % indvars
             s_lwc_pdi=[s_lwc_pdi;mosaicify(clouds.(camp)(iday).s_lwc_pdi,arat(ir))];
             normAC=[normAC;mosaicify(clouds.(camp)(iday).normAC,arat(ir))];
@@ -218,7 +218,7 @@ end
 toc
 %%
 close all
-% load scale_analysis
+load scale_analysis
 figure('Position',[1282 951 1142 386])
 tl=tiledlayout('flow');
 
@@ -236,9 +236,11 @@ fill([scalex;flipud(scalex)],...
       
 plot(scalex,rsq_mean,'LineWidth',2,'Color',color_order{1})
 grid
+ylim([-.2 .6])
 set(gca,'XScale','log')
 ylabel('\Pi_{Sc}')
-set(gca,'FontSize',16)
+xticks([1e-2 1e-1 1e0 1e1 1e2])
+set(gca,'FontSize',24)
 % saveas(gcf,'plots/pi vs scale.png')
 
 coeff_itr=zeros(ntrial,size(Sccoeff{1,1},1));
@@ -268,7 +270,8 @@ end
 grid
 set(gca,'XScale','log')
 legend('Int','m_{LAF}','m_{NH}','Location','best')
-xlabel(tl,'scale [km]','fontsize',20)
+xlabel(tl,'Scale [km]','fontsize',24)
 ylabel('Coefficients')
-set(gca,'FontSize',16)
+xticks([1.e-2 1e-1 1e0 1e1 1e2])
+set(gca,'FontSize',24)
 saveas(gcf,'plots/pi & coeff vs scale.png')
