@@ -162,7 +162,7 @@ for iday = 1:length(clouds.oraclespdi)
    
    if nleg>0
       AF = ql./ql_adb_prof;
-      AF(AF>1)=1;
+      AF(AF>1)=nan;
       clouds.oraclespdi(iday).AF = AF;
       clouds.oraclespdi(iday).ql_adb_prof = ql_adb_prof;
    else
@@ -178,6 +178,6 @@ for iday = 1:length(clouds.oraclespdi)
 end
 %%
 % save('oraclespdi_flight_basics.mat', 'oraclespdi_flight_basics')
-save('clouds.mat','clouds', '-v7.3')
+% save('clouds.mat','clouds', '-v7.3')
 
 %%

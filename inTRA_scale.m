@@ -24,7 +24,7 @@ ntrial=20;
 [Sctest_rsq,Sctrain_rsq]=deal(zeros(length(arat),ntrial));
 Sccoeff={};
 max_ratio=[1 2 3 5 10 20 50];
-iratio=2;
+iratio=1;
 nlyrs=20;
 
 tic
@@ -241,6 +241,7 @@ set(gca,'XScale','log')
 ylabel('\Pi_{Sc}')
 xticks([1e-2 1e-1 1e0 1e1 1e2])
 set(gca,'FontSize',24)
+title('(a)')
 % saveas(gcf,'plots/pi vs scale.png')
 
 coeff_itr=zeros(ntrial,size(Sccoeff{1,1},1));
@@ -273,5 +274,7 @@ legend('Int','m_{LAF}','m_{NH}','Location','best')
 xlabel(tl,'Scale [km]','fontsize',24)
 ylabel('Coefficients')
 xticks([1.e-2 1e-1 1e0 1e1 1e2])
+title('(b)')
 set(gca,'FontSize',24)
-saveas(gcf,'plots/pi & coeff vs scale.png')
+exportgraphics(gcf,'../paper in progress/figs/fig6.jpg','Resolution',300)
+% saveas(gcf,'plots/pi & coeff vs scale.png')

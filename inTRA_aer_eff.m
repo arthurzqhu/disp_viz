@@ -352,7 +352,7 @@ if doplot
       
       subplot(2,4,7)
       hold on
-      set(gca,'Color',[.95 .95 .95])
+%       set(gca,'Color',[.95 .95 .95])
       set(gca,'XColor','k')
       set(gca,'YColor','k')
       plot([0 1], [0 1])
@@ -466,5 +466,6 @@ if doplot
    
    
    %    saveas(figure(1),'plots/sp_meas_vs_pred_eps_u.png') %not using figure anymore
-   saveas(figure(2),'plots/gen_meas_vs_pred_eps_u.png')
+%    saveas(figure(2),'plots/gen_meas_vs_pred_eps_u.png')
+%    exportgraphics(figure(2),'../paper in progress/figs/fig5.jpg','Resolution',300)
 end

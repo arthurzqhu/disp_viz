@@ -231,6 +231,6 @@ end
 
 %% Save the data
 leg_inspection_oracles;
-save('clouds.mat','clouds', '-v7.3')
+% save('clouds.mat','clouds', '-v7.3')
 
 % finishingTaskSound

@@ -4,13 +4,13 @@ clearvars -except clouds
 if ~exist('clouds','var') load clouds.mat, end
 post_aer_files = dir('post/POST_pcasp/pcasp_1hz_*');
 
-%% get rid of the old fieldnames first
-for iday = 1:length(clouds.postpdi)
-   post_fn=fieldnames(clouds.postpdi(iday));
-   ext_idx = startsWith(post_fn,'a_') | startsWith(post_fn,'ccn_');
-   newstrct(iday)=rmfield(clouds.postpdi(iday),post_fn(ext_idx));
-end
-clouds.postpdi=newstrct;
+% %% get rid of the old fieldnames first
+% for iday = 1:length(clouds.postpdi)
+%    post_fn=fieldnames(clouds.postpdi(iday));
+%    ext_idx = startsWith(post_fn,'a_') | startsWith(post_fn,'ccn_');
+%    newstrct(iday)=rmfield(clouds.postpdi(iday),post_fn(ext_idx));
+% end
+% clouds.postpdi=newstrct;
 %%
 pdi_date_start_char = regexp(clouds.postpdi(1).file,'/');
 

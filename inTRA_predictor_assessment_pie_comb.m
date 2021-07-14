@@ -380,3 +380,4 @@ set(gca,'FontSize', 18)
 set(gca,'YColor',color_order(6,:))
 
 % saveas(gcf, 'plots/(pie) why i chose certain predictors_u.png')
+exportgraphics(gcf,'../paper in progress/figs/fig4.jpg','Resolution',300)

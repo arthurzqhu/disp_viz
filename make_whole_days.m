@@ -203,11 +203,11 @@ for c= 1:length(campaigns)
         s_t = clouds.(camp)(ifile).s_t;
 
 %             cm_normAC = gen(ifile).normAC(idxpdi); % where normAC and PCASP data are measured at the same time
-        s_ap = gen(ifile).s_ap;
-        s_lwc_pdi = gen(ifile).s_lwc_pdi;
+        s_ap = clouds.(camp)(ifile).s_ap;
+        s_lwc_pdi = clouds.(camp)(ifile).s_lwc_pdi;
         s_ntot_aer = clouds.(camp)(ifile).s_ntot_aer;
         s_ntot_pdi = clouds.(camp)(ifile).s_ntot_pdi;
-        s_disp_pdi = gen(ifile).s_disp_pdi;
+        s_disp_pdi = clouds.(camp)(ifile).s_disp_pdi;
 
         if ~isempty(cloudlegs_i)
             for ileg = 1:length(cloudlegs_i)
@@ -240,9 +240,10 @@ for c= 1:length(campaigns)
                 aerCMS = @(x) calcMeanSampsize(x, s_t < tf & s_t > ti & s_ap < z_max_sampled);
                 cldCMS = @(x) calcMeanSampsize(x, s_t < tf_c & s_t > ti_c & s_ap < z_max_sampled & s_ntot_pdi > 5);
                 
+%                 if c==1, pause, end
+                
                 try
-%                         drpCMS = @(x) calcMeanSampsize(x, s_t < tf & s_t > ti & gen(ifile).s_ap < z_max_sampled);
-
+% drpCMS = @(x) calcMeanSampsize(x, s_t < tf & s_t > ti & gen(ifile).s_ap < z_max_sampled);
                     [gen(ifile).a_ntot_CB(ileg), gen(ifile).a_ntot_CB_sampsize(ileg)] = ...
                         aerCMS(s_ntot_aer);
                     [gen(ifile).s_ntot_CB(ileg), gen(ifile).s_ntot_CB_sampsize(ileg)] = ...
@@ -383,5 +384,5 @@ end
 vocals_aeros_dat;
 post_aeros_dat;
 mase_aeros_dat;
-save('clouds.mat','clouds', '-v7.3')
+% save('clouds.mat','clouds', '-v7.3')
 % finishingTaskSound

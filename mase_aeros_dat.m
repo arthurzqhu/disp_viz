@@ -4,13 +4,13 @@ clearvars -except clouds
 if ~exist('clouds','var') load clouds.mat, end
 mase_aer_files = dir('mase/MASE_pcasp/PCASP_05*');
 
-%% get rid of the old fieldnames first
-for iday = 1:length(clouds.masepdi)
-   mase_fn=fieldnames(clouds.masepdi(iday));
-   ext_idx = startsWith(mase_fn,'a_') | startsWith(mase_fn,'ccn_');
-   newstrct(iday)=rmfield(clouds.masepdi(iday),mase_fn(ext_idx));
-end
-clouds.masepdi=newstrct;
+% %% get rid of the old fieldnames first
+% for iday = 1:length(clouds.masepdi)
+%    mase_fn=fieldnames(clouds.masepdi(iday));
+%    ext_idx = startsWith(mase_fn,'a_') | startsWith(mase_fn,'ccn_');
+%    newstrct(iday)=rmfield(clouds.masepdi(iday),mase_fn(ext_idx));
+% end
+% clouds.masepdi=newstrct;
 %%
 pdi_date_start_char = regexp(clouds.masepdi(1).file,'/');
 

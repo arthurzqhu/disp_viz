@@ -4,13 +4,13 @@ clearvars -except clouds
 if ~exist('clouds','var') load clouds.mat, end
 vocals_aer_files = dir('vocals/VOCALS_pcasp/PCASP_08*');
 
-%% get rid of the old fieldnames first
-for iday = 1:length(clouds.vocalspdi)
-   vocals_fn=fieldnames(clouds.vocalspdi(iday));
-   ext_idx = startsWith(vocals_fn,'a_') | startsWith(vocals_fn,'ccn_');
-   newstrct(iday)=rmfield(clouds.vocalspdi(iday),vocals_fn(ext_idx));
-end
-clouds.vocalspdi=newstrct;
+% %% get rid of the old fieldnames first
+% for iday = 1:length(clouds.vocalspdi)
+%    vocals_fn=fieldnames(clouds.vocalspdi(iday));
+%    ext_idx = startsWith(vocals_fn,'a_') | startsWith(vocals_fn,'ccn_');
+%    newstrct(iday)=rmfield(clouds.vocalspdi(iday),vocals_fn(ext_idx));
+% end
+% clouds.vocalspdi=newstrct;
 %%
 pdi_date_start_char = regexp(clouds.vocalspdi(1).file,'/');
 
